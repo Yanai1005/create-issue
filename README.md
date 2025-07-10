@@ -9,7 +9,7 @@ GitHub Personal Access Token (PAT)
 
 ## セットアップ
 1. リポジトリのクローン
-bash```
+```bash
 git clone https://github.com/Yanai1005/create-issue
 cd createissue
 ```
