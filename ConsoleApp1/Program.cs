@@ -11,19 +11,23 @@ namespace ConsoleApp1
 		{
 			try
 			{
-				Console.WriteLine("GitHub Issue 一括登録ツール (疎結合版)");
-				Console.WriteLine("=====================================");
+				Console.WriteLine("GitHub Issue 一括登録ツール (JSON設定版)");
+				Console.WriteLine("==========================================");
 
-				// 設定の初期化
-				var config = new AppConfig();
+				// 設定の読み込み
+				var config = AppConfig.LoadFromJson();
+
+				// デバッグ情報の表示
+				if (config.ShowDebugInfo)
+				{
+					Console.WriteLine($"実行ディレクトリ: {Directory.GetCurrentDirectory()}");
+					Console.WriteLine($"実行ファイル場所: {System.Reflection.Assembly.GetExecutingAssembly().Location}");
+					Console.WriteLine();
+				}
 
 				// 設定の妥当性チェック
 				if (!config.IsValid())
 				{
-					Console.WriteLine("設定が正しくありません。AppConfig.csの設定値を確認してください。");
-					Console.WriteLine("- GitHubToken: Personal Access Tokenを設定");
-					Console.WriteLine("- RepoOwner: リポジトリオーナー名を設定");
-					Console.WriteLine("- RepoName: リポジトリ名を設定");
 					return;
 				}
 
@@ -34,6 +38,8 @@ namespace ConsoleApp1
 				try
 				{
 					// ファイル存在チェック
+					Console.WriteLine($"JSONファイルパス: {config.JsonFilePath}");
+
 					if (!fileService.FileExists(config.JsonFilePath))
 					{
 						Console.WriteLine($"JSONファイルが見つかりません: {config.JsonFilePath}");
