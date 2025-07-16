@@ -1,76 +1,88 @@
 [
   {
-    "title": "パフォーマンス改善: データベースクエリの最適化",
-    "body": "## 問題の概要\nユーザー一覧ページの読み込みが非常に遅くなっています。\n\n## 現在の状況\n- ページ読み込みに10秒以上かかる\n- データベースクエリが複数回実行されている\n- N+1問題が発生している可能性\n\n## 改善案\n- クエリの結合処理\n- インデックスの見直し\n- キャッシュ機能の導入\n\n## 期待される効果\nページ読み込み時間を3秒以内に短縮",
-    "labels": [ "performance", "database", "high-priority" ],
+    "title": "APIレート制限の実装",
+    "body": "## 背景\n現在のAPIには適切なレート制限がなく、大量のリクエストによりサーバーが不安定になることがあります。\n\n## 実装する機能\n- IP単位でのリクエスト制限\n- ユーザー認証レベル別の制限\n- Redis を使用したカウンター管理\n- 制限超過時の適切なHTTPステータス返却\n\n## 設定案\n- 未認証ユーザー: 100リクエスト/時間\n- 認証済みユーザー: 1000リクエスト/時間\n- プレミアムユーザー: 5000リクエスト/時間\n\n## 技術スタック\n- Redis for rate limiting\n- Express.js middleware\n- Docker compose for development",
+    "labels": [ "api", "rate-limiting", "redis", "backend" ],
     "assignees": [],
     "comments": [
       {
-        "body": "データベースの実行プランを確認しました。主な問題はユーザーテーブルとプロフィールテーブルの結合処理にあるようです。"
+        "body": "Redis Clusterの設定についてインフラチームと相談が必要です。本番環境での冗長化も検討してください。"
       },
       {
-        "body": "インデックスを以下のカラムに追加することを提案します：\n- users.created_at\n- profiles.user_id\n- posts.user_id"
+        "body": "rate-limiter-flexibleライブラリの使用を提案します。多機能で実績もあります。"
       }
     ]
   },
   {
-    "title": "セキュリティ: XSS脆弱性の修正",
-    "body": "## 脆弱性の詳細\nコメント投稿機能でXSS攻撃が可能な状態です。\n\n## 影響範囲\n- コメント表示部分\n- ユーザープロフィール編集\n- 投稿タイトル表示\n\n## 修正方針\n- 入力値のサニタイズ処理\n- HTML エスケープ処理の強化\n- CSP（Content Security Policy）の導入\n\n## 優先度\n最高（セキュリティ関連）",
-    "labels": [ "security", "critical", "vulnerability" ],
+    "title": "多言語対応（i18n）の追加",
+    "body": "## 対応言語\n日本語、英語、中国語（簡体字）、韓国語のサポートを追加します。\n\n## 対応範囲\n### フロントエンド\n- UIテキストの多言語化\n- 日付・時刻フォーマットの地域対応\n- 数値・通貨表示の地域対応\n- RTL（右から左）レイアウト対応準備\n\n### バックエンド\n- エラーメッセージの多言語化\n- メール テンプレートの多言語化\n- データベースの多言語コンテンツ対応\n\n## 技術要件\n- React i18next\n- ICU Message Format\n- Crowdin for translation management\n- 自動翻訳品質チェック",
+    "labels": [ "i18n", "frontend", "localization", "feature" ],
     "assignees": [],
     "comments": [
       {
-        "body": "脆弱性スキャンツールで検証済みです。緊急度が高いため、今週中の修正をお願いします。"
-      }
-    ]
-  },
-  {
-    "title": "UI/UX改善: モバイル対応の強化",
-    "body": "## 改善の背景\nモバイルユーザーからの使いにくさに関する報告が増加しています。\n\n## 現在の問題\n- タッチ操作に適していないボタンサイズ\n- 画面サイズに応じた適切なレイアウトになっていない\n- フォーム入力時のキーボード表示で画面が崩れる\n\n## 改善内容\n- レスポンシブデザインの見直し\n- タッチフレンドリーなUI要素への変更\n- モバイル専用ナビゲーションの実装\n\n## 対象デバイス\niOS、Android スマートフォン・タブレット",
-    "labels": [ "ui", "ux", "mobile", "enhancement" ],
-    "assignees": [],
-    "comments": [
-      {
-        "body": "ユーザーテストの結果、特にiPhoneでの操作性に問題があることが判明しました。"
+        "body": "翻訳管理にCrowdinを使用予定です。翻訳者のアクセス権限について検討が必要。"
       },
       {
-        "body": "Figmaでモックアップを作成しました。レビューをお願いします。\nhttps://figma.com/mockup-example"
-      }
-    ]
-  },
-  {
-    "title": "バグ修正: ファイルアップロードの失敗",
-    "body": "## バグの詳細\n特定の条件下でファイルアップロードが失敗します。\n\n## 再現条件\n- ファイルサイズが5MB以上\n- ファイル名に日本語が含まれる\n- 特定のブラウザ（Safari、Edge）\n\n## エラー内容\n- 「アップロードに失敗しました」のメッセージ\n- サーバーログにエンコーディングエラー\n- 一部ファイルが破損した状態で保存される\n\n## 修正予定\n- ファイル名のエンコーディング処理改善\n- アップロードサイズ制限の見直し\n- エラーハンドリングの強化",
-    "labels": [ "bug", "file-upload", "medium-priority" ],
-    "assignees": [],
-    "comments": [
-      {
-        "body": "Safariでのテストを実施しました。UTF-8エンコーディングの問題を確認できました。"
-      }
-    ]
-  },
-  {
-    "title": "新機能: 通知システムの実装",
-    "body": "## 機能の概要\nユーザーに重要な情報をリアルタイムで通知するシステムを構築します。\n\n## 実装内容\n### フロントエンド\n- 画面右上に通知アイコン\n- 未読通知数の表示\n- 通知一覧のポップアップ表示\n\n### バックエンド\n- WebSocket接続によるリアルタイム通知\n- 通知データのデータベース設計\n- 通知設定のユーザーカスタマイズ\n\n## 通知種別\n- システムメンテナンス情報\n- 新機能のお知らせ\n- セキュリティ関連の警告\n- 個人宛メッセージ\n\n## 技術要件\n- WebSocket または Server-Sent Events\n- プッシュ通知（PWA対応時）",
-    "labels": [ "feature", "notification", "websocket", "enhancement" ],
-    "assignees": [],
-    "comments": [
-      {
-        "body": "技術調査を行いました。WebSocketライブラリはSignalRを使用する予定です。"
+        "body": "文字数制限のあるUI要素（ボタンなど）で、各言語での表示確認が重要です。"
       },
       {
-        "body": "データベース設計のERDを作成しました。notifications、notification_settings、user_notificationsテーブルが必要になります。"
+        "body": "韓国語・中国語のフォント読み込みでパフォーマンス影響がないか検証してください。"
       }
     ]
   },
   {
-    "title": "インフラ: CI/CDパイプラインの構築",
-    "body": "## 目的\n開発効率の向上と品質保証のためのCI/CDパイプラインを構築します。\n\n## 現在の課題\n- 手動デプロイによる人的ミス\n- テスト実行の忘れ\n- 本番環境とステージング環境の差異\n- デプロイ時間の長さ\n\n## 実装予定\n### CI（継続的インテグレーション）\n- 自動テスト実行（単体テスト、統合テスト）\n- コード品質チェック（ESLint、SonarQube）\n- セキュリティスキャン\n- ビルド成果物の生成\n\n### CD（継続的デプロイ）\n- ステージング環境への自動デプロイ\n- 本番環境へのワンクリックデプロイ\n- ロールバック機能\n- 環境別設定管理\n\n## 使用技術\n- GitHub Actions または GitLab CI\n- Docker コンテナ\n- AWS または Azure",
-    "labels": [ "infrastructure", "ci-cd", "devops", "automation" ],
+    "title": "Dockerコンテナ化とKubernetes移行",
+    "body": "## 移行の目的\n現在のVMベースの運用からコンテナベースに移行し、スケーラビリティと運用効率を向上させる。\n\n## Phase 1: コンテナ化\n- アプリケーションのDockerfile作成\n- マルチステージビルドの実装\n- Docker Compose での開発環境構築\n- セキュリティスキャンの自動化\n\n## Phase 2: Kubernetes移行\n- EKSクラスターのセットアップ\n- Helm Charts の作成\n- Ingress Controller の設定\n- モニタリング（Prometheus + Grafana）\n\n## Phase 3: GitOps導入\n- ArgoCD の導入\n- 環境別デプロイメント自動化\n- ロールバック戦略の確立",
+    "labels": [ "docker", "kubernetes", "devops", "infrastructure" ],
     "assignees": [],
     "comments": [
       {
-        "body": "GitHub Actionsでの実装を検討中です。.github/workflowsディレクトリに設定ファイルを配置予定。"
+        "body": "セキュリティ要件としてistio service meshの導入も検討してください。"
+      }
+    ]
+  },
+  {
+    "title": "リアルタイムチャット機能の開発",
+    "body": "## 機能概要\nユーザー間でのリアルタイムメッセージング機能を実装します。\n\n## 主要機能\n### 基本機能\n- 1対1チャット\n- グループチャット（最大50人）\n- メッセージの既読・未読管理\n- オンライン/オフライン状態表示\n\n### 高度な機能\n- ファイル・画像の共有\n- メッセージの暗号化（E2E）\n- メッセージの検索機能\n- 通知のカスタマイズ\n\n## 技術アーキテクチャ\n- WebSocket (Socket.io)\n- Redis Pub/Sub for scaling\n- MongoDB for message storage\n- AES encryption for messages\n\n## パフォーマンス要件\n- 同時接続数: 10,000ユーザー\n- メッセージ配信遅延: < 100ms\n- 99.9% uptime",
+    "labels": [ "chat", "websocket", "realtime", "encryption" ],
+    "assignees": [],
+    "comments": [
+      {
+        "body": "E2E暗号化の実装にはWebCrypto APIを使用予定です。ブラウザ互換性を確認してください。"
+      },
+      {
+        "body": "大容量ファイル送信にはChunked uploadingを実装し、プログレス表示も必要です。"
+      }
+    ]
+  },
+  {
+    "title": "機械学習を使った推薦システム",
+    "body": "## システム概要\nユーザーの行動履歴を分析し、パーソナライズされた商品推薦を行います。\n\n## 推薦アルゴリズム\n### Phase 1: ルールベース\n- 閲覧履歴ベース推薦\n- カテゴリ別人気商品推薦\n- 協調フィルタリング（User-based）\n\n### Phase 2: 機械学習\n- Matrix Factorization (SVD)\n- Deep Learning (Neural Collaborative Filtering)\n- Content-based filtering\n- Hybrid approach\n\n## データパイプライン\n- Apache Kafka for streaming data\n- Apache Spark for batch processing\n- MLflow for model management\n- A/B testing framework\n\n## 評価指標\n- Precision@K, Recall@K\n- NDCG (Normalized Discounted Cumulative Gain)\n- Click-through rate\n- Conversion rate",
+    "labels": [ "ml", "recommendation", "data-science", "analytics" ],
+    "assignees": [],
+    "comments": [
+      {
+        "body": "初期データとして過去6ヶ月分のユーザー行動ログを使用します。GDPR対応も確認してください。"
+      },
+      {
+        "body": "コールドスタート問題の解決として、デモグラフィック情報も活用しましょう。"
+      }
+    ]
+  },
+  {
+    "title": "セキュリティ監査とペネトレーションテスト",
+    "body": "## 監査の目的\n外部セキュリティ会社による包括的なセキュリティ評価を実施し、脆弱性の特定と修正を行います。\n\n## 監査範囲\n### アプリケーションセキュリティ\n- OWASP Top 10 の検証\n- API エンドポイントの脆弱性テスト\n- 認証・認可機能の検証\n- SQLインジェクション、XSS、CSRF テスト\n\n### インフラセキュリティ\n- ネットワーク設定の検証\n- サーバー設定の監査\n- データベースセキュリティ\n- クラウドインフラの設定確認\n\n## 修正計画\n### Critical (即座に修正)\n- 認証バイパス\n- データ漏洩リスク\n\n### High (1週間以内)\n- 権限昇格\n- 機密データアクセス\n\n### Medium (1ヶ月以内)\n- 情報漏洩\n- サービス拒否攻撃\n\n## コンプライアンス確認\n- SOC 2 Type II 準拠\n- GDPR 対応状況\n- PCI DSS 要件（決済関連）",
+    "labels": [ "security", "audit", "penetration-test", "compliance" ],
+    "assignees": [],
+    "comments": [
+      {
+        "body": "外部監査会社との契約が完了しました。来月から3週間の予定です。"
+      },
+      {
+        "body": "監査期間中は本番環境への変更を制限し、緊急時対応チームを待機させてください。"
+      },
+      {
+        "body": "修正完了後、再テストのスケジュールも確保しておきましょう。"
       }
     ]
   }

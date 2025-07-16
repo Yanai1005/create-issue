@@ -56,9 +56,7 @@ namespace ConsoleApp1
         {
             try
             {
-                Console.WriteLine($"設定ファイルを検索中: {configFilePath}");
                 var fullPath = GetConfigFilePath(configFilePath);
-                Console.WriteLine($"検索結果: {fullPath}");
 
                 if (!File.Exists(fullPath))
                 {
